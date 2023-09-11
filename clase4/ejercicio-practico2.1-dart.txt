@@ -1,0 +1,73 @@
+// Enum para representar roles
+enum Rol { empleado, profesor, director }
+
+// Clase abstracta Persona
+abstract class Persona {
+  final String nombre;
+  final String apellido;
+  final int edad;
+  final Rol rol;
+
+  Persona(this.nombre, this.apellido, this.edad, this.rol)
+      : assert(nombre.isNotEmpty && apellido.isNotEmpty, 'Nombre y apellido no pueden estar vacíos.'),
+        assert(edad >= 0, 'La edad no puede ser negativa.');
+
+  double calcularSalario();
+
+  void imprimirDatos() {
+    print('Rol: $rol');
+    print('Nombre: $nombre $apellido');
+    print('Salario: \$${calcularSalario()}');
+    print('Edad: $edad años');
+    print('');
+  }
+}
+
+// Subclase Empleado
+class Empleado extends Persona {
+  final double salarioMensual;
+
+  Empleado(String nombre, String apellido, int edad, this.salarioMensual)
+      : assert(salarioMensual >= 0, 'El salario mensual no puede ser negativo.'),
+        super(nombre, apellido, edad, Rol.empleado);
+
+  @override
+  double calcularSalario() => salarioMensual;
+}
+
+// Subclase Profesor
+class Profesor extends Persona {
+  final double salarioPorHora;
+  final int horasTrabajadas;
+
+  Profesor(String nombre, String apellido, int edad, this.salarioPorHora, this.horasTrabajadas)
+      : assert(salarioPorHora >= 0, 'El salario por hora no puede ser negativo.'),
+        assert(horasTrabajadas >= 0, 'Las horas trabajadas no pueden ser negativas.'),
+        super(nombre, apellido, edad, Rol.profesor);
+
+  @override
+  double calcularSalario() => salarioPorHora * horasTrabajadas;
+}
+
+// Subclase Director
+class Director extends Persona {
+  Director(String nombre, String apellido, int edad)
+      : super(nombre, apellido, edad, Rol.director);
+
+  @override
+  double calcularSalario() => 10000.0; // Salario fijo para el Director
+}
+
+void main() {
+  try {
+    final empleado = Empleado('Ever', 'Esli', 33, 3000.0);
+    final profesor = Profesor('Raul', 'Garcia', 35, 50.0, 44);
+    final director = Director('Wilfredo', 'Melgar', 45);
+
+    empleado.imprimirDatos();
+    profesor.imprimirDatos();
+    director.imprimirDatos();
+  } catch (e) {
+    print('Error: $e');
+  }
+}
